@@ -1,7 +1,14 @@
+from enum import Enum
 from typing import Literal
 
 from pydantic import BaseModel, Field
 
+class Severity(str, Enum):
+    """How much a venue cares. Set by the judge, never by a check."""
+
+    ERROR = "error"
+    WARNING = "warning"
+    INFO = "info"
 
 class PdfMetadataLocation(BaseModel):
     """A field in the PDF's hidden info, e.g. /Author."""
@@ -39,3 +46,4 @@ class Finding(BaseModel):
     confidence: float = Field(ge=0.0, le=1.0)
     evidence: str | None = None
     remediation: str | None = None
+    severity: Severity | None = None
