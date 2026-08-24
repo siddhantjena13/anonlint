@@ -10,6 +10,14 @@ class Severity(str, Enum):
     WARNING = "warning"
     INFO = "info"
 
+class CheckStatus(str, Enum):
+    """Whether the check could do its job — separate from what it found."""
+
+    CLEAN = "clean"        # ran, found nothing
+    FLAGGED = "flagged"    # ran, found something
+    SKIPPED = "skipped"    # didn't apply (no metadata, not a repo)
+    ERRORED = "errored"    # tried and failed (encrypted, corrupt)
+
 class PdfMetadataLocation(BaseModel):
     """A field in the PDF's hidden info, e.g. /Author."""
 
@@ -47,3 +55,11 @@ class Finding(BaseModel):
     evidence: str | None = None
     remediation: str | None = None
     severity: Severity | None = None
+
+class CheckResult(BaseModel):
+    """The outcome of running one check."""
+
+    check_id: str
+    status: CheckStatus
+    findings: list[Finding] = []
+    detail: str | None = None
